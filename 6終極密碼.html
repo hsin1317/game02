@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>猜數字遊戲</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>猜數字遊戲</h1>
+        <p>我已經選了一個 1 到 100 的隨機數字，你能猜出來嗎？</p>
+        <input type="number" id="guessInput" placeholder="輸入你的猜測">
+        <button onclick="checkGuess()">提交猜測</button>
+        <button onclick="resetGame()">重新開始</button>
+        <div class="message" id="message">準備好開始遊戲！</div>
+    </div>
+
+    <script>
+        let randomNumber = Math.floor(Math.random() * 100) + 1;
+        let attempts = 0;
+        let minRange = 1; // 最低可能範圍
+        let maxRange = 100; // 最高可能範圍
+
+        function checkGuess() {
+            const guess = parseInt(document.getElementById('guessInput').value);
+            const message = document.getElementById('message');
+            attempts++;
+
+            if (isNaN(guess)) {
+                message.textContent = "請輸入一個有效的數字！";
+                return;
+            }
+
+            if (guess < minRange || guess > maxRange) {
+                message.textContent = `請輸入範圍內的數字：${minRange} 到 ${maxRange}！`;
+                return;
+            }
+
+            if (guess < randomNumber) {
+                minRange = guess + 1; // 更新最低範圍
+                message.textContent = `太小了！你已經猜了 ${attempts} 次。下一次猜 ${minRange} 到 ${maxRange} 之間的數字。`;
+            } else if (guess > randomNumber) {
+                maxRange = guess - 1; // 更新最高範圍
+                message.textContent = `太大了！你已經猜了 ${attempts} 次。下一次猜 ${minRange} 到 ${maxRange} 之間的數字。`;
+            } else {
+                message.textContent = `恭喜你！猜對了！答案是 ${randomNumber}。總共猜了 ${attempts} 次。`;
+            }
+        }
+
+        function resetGame() {
+            randomNumber = Math.floor(Math.random() * 100) + 1;
+            attempts = 0;
+            minRange = 1; // 重置最低範圍
+            maxRange = 100; // 重置最高範圍
+            document.getElementById('message').textContent = "遊戲已重置，準備開始！";
+            document.getElementById('guessInput').value = "";
+        }
+    </script>
+</body>
+</html>
